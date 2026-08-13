@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Registration</title>
+<style>
+body{font-family:Arial;background:#f3f6fb;margin:0}.wrap{max-width:700px;margin:40px auto;padding:20px}
+.card{background:#fff;padding:28px;border-radius:16px;box-shadow:0 8px 30px #0001}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:6px}
+.full{grid-column:1/-1}input,textarea{padding:12px;border:1px solid #ccd3df;border-radius:8px}
+textarea{min-height:80px}button{padding:13px 20px;border:0;border-radius:8px;background:#173b8f;color:#fff}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style></head><body><div class="wrap"><div class="card">
+<h1>User Registration</h1><form id="f"><div class="grid">
+<div class="field"><label>Full Name *</label><input name="name" required></div>
+<div class="field"><label>Mobile Number *</label><input name="mobile" type="tel" required></div>
+<div class="field"><label>Email Address *</label><input name="email" type="email" required></div>
+<div class="field"><label>Company / Business Name</label><input name="company"></div>
+<div class="field full"><label>Address</label><textarea name="address"></textarea></div>
+<div class="field"><label>City</label><input name="city"></div>
+<div class="field"><label>State</label><input name="state"></div>
+<div class="field"><label>Country</label><input name="country" value="India"></div>
+<div class="field"><label>PIN Code</label><input name="pincode"></div>
+</div><br><button id="b">Submit</button><p id="m"></p></form>
+</div></div>
+<script>
+f.addEventListener("submit",async e=>{
+ e.preventDefault(); b.disabled=true; m.textContent="Submitting...";
+ try{
+  const r=await fetch("/api/register",{method:"POST",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify(Object.fromEntries(new FormData(f)))});
+  const d=await r.json(); if(!r.ok) throw Error(d.message);
+  m.textContent="✓ Details submitted successfully."; f.reset(); f.country.value="India";
+ }catch(x){m.textContent="Error: "+x.message}finally{b.disabled=false}
+});
+</script></body></html>
